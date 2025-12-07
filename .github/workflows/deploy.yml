@@ -1,0 +1,98 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          ssh -i ~/.ssh/deploy_key $EC2_USER@$EC2_HOST << 'ENDSSH'
+            set -e
+
+            # Navigate to project directory
+            cd ~/focusflow
+
+            # Pull latest changes
+            git fetch origin
+            git reset --hard origin/main
+
+            # Update .env.production with secrets
+            cat > .env.production << EOF
+          # Django Backend Configuration
+          DEBUG=False
+          DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
+
+          # Domain Configuration
+          ALLOWED_HOSTS=breathingmonk.com,www.breathingmonk.com
+          CORS_ALLOWED_ORIGINS=https://breathingmonk.com,https://www.breathingmonk.com
+          CSRF_TRUSTED_ORIGINS=https://breathingmonk.com,https://www.breathingmonk.com
+
+          # Database Configuration
+          POSTGRES_DB=focusflow
+          POSTGRES_USER=focusflow
+          POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+
+          # Frontend Configuration
+          VITE_API_URL=https://breathingmonk.com/api
+          EOF
+
+            # Deploy application
+            ./deploy.sh
+
+            echo "Deployment completed successfully!"
+          ENDSSH
+
+      - name: Verify Deployment
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy_key $EC2_USER@$EC2_HOST << 'ENDSSH'
+            cd ~/focusflow
+            docker-compose -f docker-compose.prod.yml ps
+          ENDSSH
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+
+      - name: Notify Deployment Status
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo "🌐 Application: https://breathingmonk.com"
+          echo "🔧 API: https://breathingmonk.com/api"
+          echo "⚙️  Admin: https://breathingmonk.com/admin"
+
+      - name: Notify Deployment Failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Check the logs above for details."

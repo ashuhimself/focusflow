@@ -40,3 +40,5 @@ dist/
 
 # Docker
 *.pid
+secrets.txt
+secret.txt

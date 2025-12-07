@@ -2,6 +2,14 @@
 
 A production-grade, multi-tenant web application for engineers to track learning goals, daily tasks, and habits with a dark, moody, Obsidian-like aesthetic.
 
+## 📚 Documentation
+
+- **[Credentials Setup Guide](CREDENTIALS_SETUP.md)** - Complete step-by-step credentials and secrets setup
+- **[Production Deployment Guide](PRODUCTION_README.md)** - AWS infrastructure and CI/CD deployment
+- **[Development Setup Guide](DEVELOPMENT_README.md)** - Local development environment setup
+- **[Architecture Overview](ARCHITECTURE.md)** - System design and technical decisions
+- **[Development Guidelines](DEVELOPMENT.md)** - Coding standards and contribution guidelines
+
 ## Tech Stack
 
 ### Backend
