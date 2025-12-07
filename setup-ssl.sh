@@ -38,7 +38,7 @@ docker-compose -f docker-compose.prod.yml --env-file .env.production run --rm ce
     --agree-tos \
     --no-eff-email \
     -d breathingmonk.com \
-    -d www.breathingmonk.com
+    -d www.breathingmonk.com || echo -e "${GREEN}Certificates already exist, continuing...${NC}"
 
 # Step 4: Switch to SSL configuration
 echo -e "${YELLOW}Step 4: Switching to SSL configuration...${NC}"
