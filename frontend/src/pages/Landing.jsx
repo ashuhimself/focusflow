@@ -1,5 +1,5 @@
 /**
- * Landing Page - Beautiful marketing page for FocusFlow
+ * Landing Page - Beautiful marketing page for BreathingMonk
  */
 import { useNavigate } from 'react-router-dom';
 import {
@@ -110,7 +110,7 @@ const Landing = () => {
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-                FocusFlow
+                BreathingMonk
               </span>
             </div>
             <div className="flex gap-4">
@@ -146,7 +146,7 @@ const Landing = () => {
             </h1>
 
             <p className="text-xl md:text-2xl text-text-muted mb-8 max-w-4xl mx-auto leading-relaxed">
-              Stop wasting time on scattered tutorials. FocusFlow gives you a <span className="text-primary font-semibold">battle-tested 3-month system</span> to master AWS, DevOps, AI Engineering, Backend Development, Data Engineering, and Trading simultaneously.
+              Stop wasting time on scattered tutorials. BreathingMonk gives you a <span className="text-primary font-semibold">battle-tested 3-month system</span> to master AWS, DevOps, AI Engineering, Backend Development, Data Engineering, and Trading simultaneously.
             </p>
 
             <div className="bg-dark-elevated/50 border border-primary/20 rounded-xl p-6 mb-12 max-w-3xl mx-auto">
@@ -244,7 +244,7 @@ const Landing = () => {
                 ))}
               </div>
               <p className="text-text-primary mb-6 italic">
-                "FocusFlow transformed my career. I went from zero AWS knowledge to passing the Solutions Architect exam in 8 weeks. The parallel learning approach is genius!"
+                "BreathingMonk transformed my career. I went from zero AWS knowledge to passing the Solutions Architect exam in 8 weeks. The parallel learning approach is genius!"
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center text-white font-bold">
@@ -351,7 +351,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">The Science-Backed Learning System</h2>
-            <p className="text-text-muted text-lg">Why FocusFlow works when other methods fail</p>
+            <p className="text-text-muted text-lg">Why BreathingMonk works when other methods fail</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -412,7 +412,7 @@ const Landing = () => {
 
           {/* Benefits Grid */}
           <div className="bg-dark-elevated border border-dark-border rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-center mb-8">Why Choose FocusFlow?</h3>
+            <h3 className="text-2xl font-bold text-center mb-8">Why Choose BreathingMonk?</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="text-4xl mb-3">🎯</div>
@@ -500,7 +500,7 @@ const Landing = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
                   <Zap className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold text-text-primary">FocusFlow</span>
+                <span className="text-xl font-bold text-text-primary">BreathingMonk</span>
               </div>
               <p className="text-text-muted text-sm">
                 The ultimate learning operating system for ambitious developers and engineers.
@@ -532,7 +532,7 @@ const Landing = () => {
             <div>
               <h4 className="font-semibold text-white mb-4">Company</h4>
               <ul className="space-y-2 text-text-muted text-sm">
-                <li>About FocusFlow</li>
+                <li>About BreathingMonk</li>
                 <li>Career Acceleration</li>
                 <li>Learning Science</li>
                 <li>Contact Us</li>
@@ -542,7 +542,7 @@ const Landing = () => {
 
           <div className="border-t border-dark-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-text-muted text-sm">
-              © 2024 FocusFlow. Built for ambitious learners.
+              © 2024 BreathingMonk. Built for ambitious learners.
             </div>
             <div className="flex items-center gap-6 text-text-muted text-sm">
               <span>🔒 Secure & Private</span>

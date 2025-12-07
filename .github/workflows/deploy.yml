@@ -50,8 +50,8 @@ jobs:
 
           # Domain Configuration
           ALLOWED_HOSTS=breathingmonk.com,www.breathingmonk.com
-          CORS_ALLOWED_ORIGINS=https://breathingmonk.com,https://www.breathingmonk.com
-          CSRF_TRUSTED_ORIGINS=https://breathingmonk.com,https://www.breathingmonk.com
+          CORS_ALLOWED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com
+          CSRF_TRUSTED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com
 
           # Database Configuration
           POSTGRES_DB=focusflow
@@ -61,6 +61,9 @@ jobs:
           # Frontend Configuration
           VITE_API_URL=https://breathingmonk.com/api
           EOF
+
+            # Make deploy script executable
+            chmod +x deploy.sh
 
             # Deploy application
             ./deploy.sh
