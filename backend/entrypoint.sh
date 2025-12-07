@@ -23,8 +23,8 @@ echo "Creating superuser..."
 python manage.py shell << END
 from django.contrib.auth.models import User
 if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@focusflow.com', 'admin123')
-    print('Superuser created: admin / admin123')
+    User.objects.create_superuser('admin', 'admin@focusflow.com', 'Darunpur@#2025')
+    print('Superuser created: admin / Darunpur@#2025')
 else:
     print('Superuser already exists')
 END
