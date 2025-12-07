@@ -1,6 +1,6 @@
 # BreathingMonk
 
-A comprehensive learning platform built for ambitious learners to master new skills through structured courses, progress tracking, and interactive learning experiences.
+A comprehensive learning platform built for ambitious learners to master new skills through structured courses, progress tracking, and interactive learning experiences.  Let's Go
 
 ## Live Application
 
