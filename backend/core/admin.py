@@ -9,6 +9,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_filter = ['is_approved', 'created_at']
     search_fields = ['user__username', 'user__email']
     readonly_fields = ['created_at', 'approved_at', 'approved_by']
+    list_editable = ['is_approved']  # Allow editing approval status directly from list view
     actions = ['approve_users']
 
     def approve_users(self, request, queryset):

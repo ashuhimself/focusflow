@@ -62,8 +62,8 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      await authAPI.register(userData);
-      return { success: true };
+      const response = await authAPI.register(userData);
+      return { success: true, message: response.message };
     } catch (err) {
       const errorMessage = err.response?.data || 'Registration failed. Please try again.';
       setError(errorMessage);

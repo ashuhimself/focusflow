@@ -17,6 +17,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -37,13 +38,12 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     setErrors({});
+    setSuccessMessage('');
 
     const result = await register(formData);
 
     if (result.success) {
-      navigate('/login', {
-        state: { message: 'Registration successful! Please log in.' },
-      });
+      setSuccessMessage(result.message || 'Registration successful! Your account is pending admin approval. You will be notified once approved.');
     } else {
       setErrors(result.error);
     }
@@ -67,9 +67,9 @@ const Register = () => {
             <h2 className="text-2xl font-semibold">Sign Up</h2>
           </div>
 
-          {errors.non_field_errors && (
-            <div className="mb-4 p-3 bg-accent-red bg-opacity-10 border border-accent-red rounded-lg">
-              <p className="text-accent-red text-sm">{errors.non_field_errors}</p>
+          {successMessage && (
+            <div className="mb-4 p-4 bg-green-500/10 border border-green-500 rounded-lg">
+              <p className="text-green-400 text-sm">{successMessage}</p>
             </div>
           )}
 
