@@ -40,7 +40,7 @@ echo -e "${GREEN}Environment variables validated ✓${NC}"
 
 # Stop existing containers
 echo -e "${YELLOW}Stopping existing containers...${NC}"
-docker-compose -f docker-compose.prod.yml down || true
+docker-compose -f docker-compose.prod.yml --env-file .env.production down || true
 
 # Pull latest changes (if in git repo)
 if [ -d .git ]; then
@@ -50,10 +50,10 @@ fi
 
 # Build and start containers
 echo -e "${YELLOW}Building Docker images...${NC}"
-docker-compose -f docker-compose.prod.yml build --no-cache
+docker-compose -f docker-compose.prod.yml --env-file .env.production build --no-cache
 
 echo -e "${YELLOW}Starting containers...${NC}"
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.yml --env-file .env.production up -d
 
 # Wait for services to be ready
 echo -e "${YELLOW}Waiting for services to start...${NC}"
@@ -61,19 +61,19 @@ sleep 10
 
 # Check if services are running
 echo -e "${YELLOW}Checking service health...${NC}"
-docker-compose -f docker-compose.prod.yml ps
+docker-compose -f docker-compose.prod.yml --env-file .env.production ps
 
 # Run migrations
 echo -e "${YELLOW}Running database migrations...${NC}"
-docker-compose -f docker-compose.prod.yml exec -T backend python manage.py migrate --noinput
+docker-compose -f docker-compose.prod.yml --env-file .env.production exec -T backend python manage.py migrate --noinput
 
 # Collect static files
 echo -e "${YELLOW}Collecting static files...${NC}"
-docker-compose -f docker-compose.prod.yml exec -T backend python manage.py collectstatic --noinput
+docker-compose -f docker-compose.prod.yml --env-file .env.production exec -T backend python manage.py collectstatic --noinput
 
 # Create superuser (if needed)
 echo -e "${YELLOW}Creating superuser...${NC}"
-docker-compose -f docker-compose.prod.yml exec -T backend python manage.py shell << EOF
+docker-compose -f docker-compose.prod.yml --env-file .env.production exec -T backend python manage.py shell << EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():
@@ -103,5 +103,5 @@ echo "  2. Change admin password"
 echo "  3. Configure GoDaddy DNS to point to this server"
 echo ""
 echo "To view logs:"
-echo "  docker-compose -f docker-compose.prod.yml logs -f"
+echo "  docker-compose -f docker-compose.prod.yml --env-file .env.production logs -f"
 echo ""
