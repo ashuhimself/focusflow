@@ -29,6 +29,5 @@ else:
     print('Superuser already exists')
 END
 
-# Start server
-echo "Starting Django development server..."
-exec python manage.py runserver 0.0.0.0:8000
+# Execute the command passed to docker (gunicorn)
+exec "$@"
