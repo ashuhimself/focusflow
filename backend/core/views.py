@@ -588,3 +588,97 @@ def custom_token_obtain(request):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_request(request):
+    """
+    Request a password reset email.
+    Generates a token and sends email with reset link.
+    """
+    from django.contrib.auth.tokens import default_token_generator
+    from django.core.mail import send_mail
+    from django.template.loader import render_to_string
+    from django.conf import settings
+
+    email = request.data.get('email')
+
+    if not email:
+        return Response(
+            {'error': 'Email is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        # Return success even if user doesn't exist (security best practice)
+        return Response(
+            {'message': 'If an account exists with this email, you will receive password reset instructions.'},
+            status=status.HTTP_200_OK
+        )
+
+    # Generate reset token
+    token = default_token_generator.make_token(user)
+
+    # Create reset URL
+    reset_url = f"https://breathingmonk.com/reset-password?token={token}&uid={user.pk}"
+
+    # Send email (in production, use proper email backend)
+    # For now, we'll just log it and return success
+    print(f"Password reset link for {user.username}: {reset_url}")
+
+    # TODO: Implement actual email sending in production
+    # Example:
+    # subject = 'Reset Your BreathingMonk Password'
+    # message = f'Click here to reset your password: {reset_url}'
+    # send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+
+    return Response(
+        {'message': 'If an account exists with this email, you will receive password reset instructions.'},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    """
+    Confirm password reset with token and set new password.
+    """
+    from django.contrib.auth.tokens import default_token_generator
+
+    token = request.data.get('token')
+    password = request.data.get('password')
+    uid = request.data.get('uid')
+
+    if not all([token, password, uid]):
+        return Response(
+            {'error': 'Token, password, and user ID are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        user = User.objects.get(pk=uid)
+    except User.DoesNotExist:
+        return Response(
+            {'error': 'Invalid reset link'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Verify token
+    if not default_token_generator.check_token(user, token):
+        return Response(
+            {'error': 'Invalid or expired reset link'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Set new password
+    user.set_password(password)
+    user.save()
+
+    return Response(
+        {'message': 'Password has been reset successfully'},
+        status=status.HTTP_200_OK
+    )

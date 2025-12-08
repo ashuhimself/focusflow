@@ -22,6 +22,8 @@ urlpatterns = [
     # Custom endpoints
     path('auth/register/', views.register_user, name='register'),
     path('auth/me/', views.current_user, name='current-user'),
+    path('auth/password-reset/', views.password_reset_request, name='password-reset'),
+    path('auth/password-reset/confirm/', views.password_reset_confirm, name='password-reset-confirm'),
     path('dashboard/stats/', views.dashboard_stats, name='dashboard-stats'),
 
     # Custom token endpoint with approval check
