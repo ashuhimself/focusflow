@@ -52,11 +52,11 @@ const Layout = () => {
         <div className="p-6 border-b border-dark-border">
           {!sidebarCollapsed ? (
             <>
-              <h1 className="text-2xl font-bold text-primary">FocusFlow</h1>
+              <h1 className="text-2xl font-bold text-primary">BreathingMonk</h1>
               <p className="text-sm text-text-muted mt-1">Life Operating System</p>
             </>
           ) : (
-            <h1 className="text-2xl font-bold text-primary text-center">FF</h1>
+            <h1 className="text-2xl font-bold text-primary text-center">BM</h1>
           )}
         </div>
 
@@ -136,7 +136,7 @@ const Layout = () => {
             {/* Logo */}
             <div className="p-6 border-b border-dark-border flex justify-between items-center">
               <div>
-                <h1 className="text-2xl font-bold text-primary">FocusFlow</h1>
+                <h1 className="text-2xl font-bold text-primary">BreathingMonk</h1>
                 <p className="text-sm text-text-muted mt-1">Life Operating System</p>
               </div>
               <button onClick={() => setMobileMenuOpen(false)} className="p-2">

@@ -1,5 +1,5 @@
 /**
- * API Service Layer for FocusFlow
+ * API Service Layer for BreathingMonk
  * Handles all HTTP requests with authentication and error handling
  */
 import axios from 'axios';

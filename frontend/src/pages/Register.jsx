@@ -56,7 +56,7 @@ const Register = () => {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-primary mb-2">FocusFlow</h1>
+          <h1 className="text-4xl font-bold text-primary mb-2">BreathingMonk</h1>
           <p className="text-text-muted">Create your account</p>
         </div>
 

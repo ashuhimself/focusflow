@@ -1,5 +1,5 @@
 /**
- * Main App Component for FocusFlow
+ * Main App Component for BreathingMonk
  * Handles routing and authentication
  */
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';

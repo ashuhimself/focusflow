@@ -1,5 +1,5 @@
 /**
- * Authentication Context for FocusFlow
+ * Authentication Context for BreathingMonk
  * Manages user authentication state and provides auth methods
  */
 import { createContext, useState, useContext, useEffect } from 'react';
