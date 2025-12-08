@@ -7,14 +7,14 @@ echo "========================================="
 echo "🚀 Starting BreathingMonk Deployment"
 echo "========================================="
 
-# Load environment variables
-if [ -f .env.production ]; then
-    echo "✓ Loading .env.production"
-    cp .env.production .env
-else
-    echo "❌ Error: .env.production not found!"
+# Verify .env file exists
+if [ ! -f .env ]; then
+    echo "❌ Error: .env file not found!"
+    echo "Please ensure .env file is created with proper credentials"
     exit 1
 fi
+
+echo "✓ Using existing .env file"
 
 # Stop existing containers
 echo "📦 Stopping existing containers..."

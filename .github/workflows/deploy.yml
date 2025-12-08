@@ -32,44 +32,7 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          ssh -i ~/.ssh/deploy_key $EC2_USER@$EC2_HOST << 'ENDSSH'
-            set -e
-
-            # Navigate to project directory
-            cd ~/focusflow
-
-            # Pull latest changes
-            git fetch origin
-            git reset --hard origin/main
-
-            # Update .env.production with secrets
-            cat > .env.production << EOF
-          # Django Backend Configuration
-          DEBUG=False
-          DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
-
-          # Domain Configuration
-          ALLOWED_HOSTS=breathingmonk.com,www.breathingmonk.com
-          CORS_ALLOWED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com
-          CSRF_TRUSTED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com
-
-          # Database Configuration
-          POSTGRES_DB=focusflow
-          POSTGRES_USER=focusflow
-          POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-
-          # Frontend Configuration
-          VITE_API_URL=https://breathingmonk.com/api
-          EOF
-
-            # Make deploy script executable
-            chmod +x deploy.sh
-
-            # Deploy application
-            ./deploy.sh
-
-            echo "Deployment completed successfully!"
-          ENDSSH
+          ssh -i ~/.ssh/deploy_key $EC2_USER@$EC2_HOST "cd ~/focusflow && git fetch origin && git reset --hard origin/main && echo 'DEBUG=False' > .env && echo 'DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY' >> .env && echo 'ALLOWED_HOSTS=breathingmonk.com,www.breathingmonk.com' >> .env && echo 'CORS_ALLOWED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com' >> .env && echo 'CSRF_TRUSTED_ORIGINS=http://breathingmonk.com,http://www.breathingmonk.com,https://breathingmonk.com,https://www.breathingmonk.com' >> .env && echo 'POSTGRES_DB=focusflow' >> .env && echo 'POSTGRES_USER=focusflow' >> .env && echo 'POSTGRES_PASSWORD=$POSTGRES_PASSWORD' >> .env && echo 'VITE_API_URL=https://breathingmonk.com/api' >> .env && chmod +x deploy.sh && ./deploy.sh"
 
       - name: Verify Deployment
         env:
