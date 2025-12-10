@@ -623,17 +623,50 @@ def password_reset_request(request):
     token = default_token_generator.make_token(user)
 
     # Create reset URL
-    reset_url = f"https://breathingmonk.com/reset-password?token={token}&uid={user.pk}"
+    frontend_url = settings.FRONTEND_URL
+    reset_url = f"{frontend_url}/reset-password?token={token}&uid={user.pk}"
 
-    # Send email (in production, use proper email backend)
-    # For now, we'll just log it and return success
-    print(f"Password reset link for {user.username}: {reset_url}")
+    # Send email with HTML template
+    try:
+        subject = 'Reset Your BreathingMonk Password'
 
-    # TODO: Implement actual email sending in production
-    # Example:
-    # subject = 'Reset Your BreathingMonk Password'
-    # message = f'Click here to reset your password: {reset_url}'
-    # send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+        # Render HTML email
+        html_message = render_to_string('emails/password_reset.html', {
+            'username': user.username,
+            'reset_url': reset_url,
+        })
+
+        # Plain text fallback
+        plain_message = f'''
+        Hello {user.username},
+
+        We received a request to reset your password for your BreathingMonk account.
+
+        Click the link below to reset your password:
+        {reset_url}
+
+        This link will expire in 24 hours.
+
+        If you didn't request a password reset, you can safely ignore this email.
+
+        Best regards,
+        The BreathingMonk Team
+        '''
+
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+
+        print(f"Password reset email sent to {email}")
+
+    except Exception as e:
+        print(f"Error sending password reset email: {e}")
+        # Don't reveal to user whether email exists or if there was an error
 
     return Response(
         {'message': 'If an account exists with this email, you will receive password reset instructions.'},

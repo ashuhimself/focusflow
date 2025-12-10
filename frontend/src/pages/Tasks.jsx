@@ -3,7 +3,7 @@
  */
 import { useState, useEffect } from 'react';
 import { taskAPI, trackAPI, sprintAPI } from '../services/api';
-import { CheckSquare, Plus, Edit, Trash2, Calendar, Target } from 'lucide-react';
+import { CheckSquare, Plus, Edit, Trash2, Calendar, Target, Search, Filter, X } from 'lucide-react';
 import Modal from '../components/Modal';
 
 const Tasks = () => {
@@ -23,6 +23,13 @@ const Tasks = () => {
     track: '',
     sprint: '',
   });
+
+  // Filter states
+  const [searchText, setSearchText] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [selectedPriority, setSelectedPriority] = useState('');
+  const [selectedTrack, setSelectedTrack] = useState('');
+  const [selectedSprint, setSelectedSprint] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -144,6 +151,52 @@ const Tasks = () => {
     return colors[priority] || colors.MEDIUM;
   };
 
+  // Filter tasks based on all criteria
+  const filteredTasks = tasks.filter((task) => {
+    // Search text filter
+    if (searchText) {
+      const searchLower = searchText.toLowerCase();
+      const matchesSearch =
+        task.title.toLowerCase().includes(searchLower) ||
+        (task.description && task.description.toLowerCase().includes(searchLower));
+      if (!matchesSearch) return false;
+    }
+
+    // Status filter
+    if (selectedStatus && task.status !== selectedStatus) {
+      return false;
+    }
+
+    // Priority filter
+    if (selectedPriority && task.priority !== selectedPriority) {
+      return false;
+    }
+
+    // Track filter
+    if (selectedTrack && task.track !== parseInt(selectedTrack)) {
+      return false;
+    }
+
+    // Sprint filter
+    if (selectedSprint && task.sprint !== parseInt(selectedSprint)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchText('');
+    setSelectedStatus('');
+    setSelectedPriority('');
+    setSelectedTrack('');
+    setSelectedSprint('');
+  };
+
+  const hasActiveFilters =
+    searchText || selectedStatus || selectedPriority || selectedTrack || selectedSprint;
+
   return (
     <div className="p-8 space-y-6">
       {/* Header */}
@@ -159,6 +212,97 @@ const Tasks = () => {
           <Plus size={20} />
           New Task
         </button>
+      </div>
+
+      {/* Filters Section */}
+      <div className="card space-y-4">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted" size={20} />
+          <input
+            type="text"
+            placeholder="Search tasks by title or description..."
+            className="input-field pl-10 w-full"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 text-sm text-text-muted">
+            <Filter size={16} />
+            <span>Filters:</span>
+          </div>
+
+          {/* Status Filter */}
+          <select
+            className="input-field w-auto text-sm"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="">All Statuses</option>
+            <option value="TODO">To Do</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="DONE">Done</option>
+          </select>
+
+          {/* Priority Filter */}
+          <select
+            className="input-field w-auto text-sm"
+            value={selectedPriority}
+            onChange={(e) => setSelectedPriority(e.target.value)}
+          >
+            <option value="">All Priorities</option>
+            <option value="HIGH">High Priority</option>
+            <option value="MEDIUM">Medium Priority</option>
+            <option value="LOW">Low Priority</option>
+          </select>
+
+          {/* Track Filter */}
+          <select
+            className="input-field w-auto text-sm"
+            value={selectedTrack}
+            onChange={(e) => setSelectedTrack(e.target.value)}
+          >
+            <option value="">All Tracks</option>
+            {tracks.map((track) => (
+              <option key={track.id} value={track.id}>
+                {track.title}
+              </option>
+            ))}
+          </select>
+
+          {/* Sprint Filter */}
+          <select
+            className="input-field w-auto text-sm"
+            value={selectedSprint}
+            onChange={(e) => setSelectedSprint(e.target.value)}
+          >
+            <option value="">All Sprints</option>
+            {sprints.map((sprint) => (
+              <option key={sprint.id} value={sprint.id}>
+                {sprint.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Clear Filters Button */}
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="flex items-center gap-1 px-3 py-1.5 bg-dark-elevated hover:bg-dark-hover rounded-lg transition-colors text-sm"
+            >
+              <X size={14} />
+              Clear Filters
+            </button>
+          )}
+
+          {/* Results Count */}
+          <div className="ml-auto text-sm text-text-muted">
+            Showing {filteredTasks.length} of {tasks.length} tasks
+          </div>
+        </div>
       </div>
 
       {/* Tasks List */}
@@ -180,9 +324,21 @@ const Tasks = () => {
             Create First Task
           </button>
         </div>
+      ) : filteredTasks.length === 0 ? (
+        <div className="card text-center py-16">
+          <Filter size={48} className="mx-auto text-text-muted mb-4" />
+          <h3 className="text-xl font-semibold mb-2">No tasks match your filters</h3>
+          <p className="text-text-muted mb-6">Try adjusting your filters to see more tasks</p>
+          <button
+            onClick={clearFilters}
+            className="btn-primary"
+          >
+            Clear All Filters
+          </button>
+        </div>
       ) : (
         <div className="space-y-3">
-          {tasks.map((task) => (
+          {filteredTasks.map((task) => (
             <div key={task.id} className="card hover:shadow-dark-lg transition-shadow group">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4 flex-1">
